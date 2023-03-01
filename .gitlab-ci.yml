@@ -1,0 +1,13 @@
+build-auth:
+  cache:
+    key: cache-for-my-task-${CI_COMMIT_REF_SLUG}
+    paths:
+      - .
+  stage: build
+  only:
+    -  auth-service
+  script:
+    - echo "build wa-auth service"
+    - make docker service=auth
+    - docker push $DOCKER_REGISTRY/ecomm/wa-auth:dev
+

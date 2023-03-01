@@ -1,0 +1,72 @@
+syntax = "proto3";
+package auth.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "internal/services/auth/proto";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Сервис авторизации по JWT";
+    version: "dev1.0";
+    contact: {
+      name: "ecommerce";
+      url: "https://trololo";
+      email: "trololo@trololo.ru";
+    };
+  };
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  host: "api.trololo.ru";
+  base_path: "/dev";
+};
+
+
+message AuthenticationRequest {
+  string uuid = 1;
+}
+message AuthenticationResponse {
+  string token = 1;
+  string refresh_token = 2;
+}
+message ValidateTokenRequest {
+  string token = 1;
+}
+message ValidateTokenResponse {
+  bool valid = 1;
+}
+//message RefreshTokenRequest {
+//  string token = 1;
+//}
+message RefreshTokenResponse {
+  string token = 1;
+  string refresh_token = 2;
+}
+
+// Сервис записи на ТО
+service Auth {
+  // Authentication генерация jwt
+  rpc Authentication(AuthenticationRequest) returns (AuthenticationResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/create"
+    };
+  }
+
+  // Validate проверка jwt token
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/validate"
+    };
+  }
+
+  // Refresh метод обновления токена
+  rpc RefreshToken(google.protobuf.Empty) returns (RefreshTokenResponse) {
+    option (google.api.http) = {
+      get: "/v1/auth/refresh"
+    };
+  }
+
+
+}
